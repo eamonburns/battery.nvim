@@ -13,7 +13,7 @@ The information is then provided as a programmatic API you can call from Lua and
 I was working on a small 12" laptop and there's not a lot of screen real estate, so I tended to maximize my terminal window when editing code. Unfortunately, that means I can't see the battery status, and don't know how long I've got without switching windows. I decided to fix that by adding it to the the statusline and this plugin was born.
 
 ## How?
-The plugin is written in Lua and depends heavily on the Plenary library for its excellent support for processes (Jobs). When you start the plugin (by calling `require"battery".setup({})`) it runs a job in the background every 5 minutes (or however often you want, see config) and updates the battery status. Then you can call `require"battery".get_status_line()` in your statusline plugin to show the battery percentage and an appropriate icon.
+The plugin is written in Lua and depends heavily on the Plenary library for its excellent support for processes (Jobs). When you start the plugin (by calling `require("battery").setup({})`) it runs a job in the background every 5 minutes (or however often you want, see config) and updates the battery status. Then you can call `require("battery").get_status_line()` in your statusline plugin to show the battery percentage and an appropriate icon.
 
 ## Features
 - Gracefully handle no battery (either remove battery info from the status line or just show a desktop icon)
@@ -23,12 +23,13 @@ The plugin is written in Lua and depends heavily on the Plenary library for its 
 
 ## Required dependencies
 ### Lua dependencies
-- [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
-- [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)
+- [`nvim-lua/plenary.nvim`](https://github.com/nvim-lua/plenary.nvim)
+- [`nvim-tree/nvim-web-devicons`](https://github.com/nvim-tree/nvim-web-devicons)
 
-**NOTICE** Please check the nvim-web-devicons repo for information on breaking changes to Nerd Fonts. This dependency is used to show the icons in this plugin and requires a compatible font. Thank you to Github user @david-0609 for bringing this to my attention and updating the icons used in this application. Should you encounter missing icons please upgrade the font you are using so it is using 2.3 or 3.0.
-
-_If you do not wish to upgrade your font you can pin to a previous version of the plugin using tag v0.8.0 instead of the main branch._
+> [!NOTE]
+> Please check the `nvim-web-devicons` repo for information on breaking changes to Nerd Fonts. This dependency is used to show the icons in this plugin and requires a compatible font. Thank you to Github user @david-0609 for bringing this to my attention and updating the icons used in this application. Should you encounter missing icons please upgrade the font you are using so it is using 2.3 or 3.0.
+>
+> _(If you do not wish to upgrade your font you can pin to a previous version of the plugin using tag v0.8.0 instead of the main branch.)_
 
 ### OS dependencies
 On Windows and macOS, PowerShell and pmset are used to obtain battery status respectively.
@@ -48,7 +49,7 @@ Plug 'justinhj/battery.nvim'
 ### [Packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-use { 'justinhj/battery.nvim', requires = {{'nvim-tree/nvim-web-devicons'}, {'nvim-lua/plenary.nvim'}}}
+use { 'justinhj/battery.nvim', requires = { { 'nvim-tree/nvim-web-devicons' }, { 'nvim-lua/plenary.nvim' } } }
 ```
 
 ## Configuration
@@ -56,25 +57,23 @@ Once installed you need to run the setup function and pass in an optional config
 
 There are some configuration options.
 
-```vim
-lua << END
+```lua
 local battery = require("battery")
 battery.setup({
-    update_rate_seconds = 30,           -- Number of seconds between checking battery status
-    show_status_when_no_battery = true, -- Don't show any icon or text when no battery found (desktop for example)
-    show_plugged_icon = true,           -- If true show a cable icon alongside the battery icon when plugged in
-    show_unplugged_icon = true,         -- When true show a diconnected cable icon when not plugged in
-    show_percent = true,                -- Whether or not to show the percent charge remaining in digits
-    vertical_icons = true,              -- When true icons are vertical, otherwise shows horizontal battery icon
-    multiple_battery_selection = 1,     -- Which battery to choose when multiple found. "max" or "maximum", "min" or "minimum" or a number to pick the nth battery found (currently linux acpi only)
+  update_rate_seconds = 30,           -- Number of seconds between checking battery status
+  show_status_when_no_battery = true, -- Don't show any icon or text when no battery found (desktop for example)
+  show_plugged_icon = true,           -- If true show a cable icon alongside the battery icon when plugged in
+  show_unplugged_icon = true,         -- When true show a diconnected cable icon when not plugged in
+  show_percent = true,                -- Whether or not to show the percent charge remaining in digits
+  vertical_icons = true,              -- When true icons are vertical, otherwise shows horizontal battery icon
+  multiple_battery_selection = 1,     -- Which battery to choose when multiple found. "max" or "maximum", "avg" or "average", or a number to pick the nth battery found (1-indexed; currently linux acpi only)
 })
-END
 ```
 
 ## Adding to [lualine](https://github.com/nvim-lualine/lualine.nvim)
 Ensure minimal setup in your config.
-```vim
-lua require"battery".setup({})
+```lua
+require("battery").setup({})
 ```
 
 In your lualine config add the following.
@@ -120,9 +119,17 @@ gls.right[5] = {
 ## Diagnostics and debugging
 If something breaks you should see a standard Vim error telling you what the problem is. There is some info logging you will find wherever your Neovim cache is `:h stdpath`.
 
-For more than just info,warn and error logging you can enable debug logs which show a more verbose behaviour of the plugin using the following command to launch nvim.
+For more than just info, warn and error logging you can enable debug logs which show a more verbose behaviour of the plugin using the following command to launch nvim.
 
-`DEBUG_PLENARY=true nvim`
+```sh
+# Bash
+DEBUG_PLENARY=true nvim
+```
+```ps1
+$env:DEBUG_PLENARY = "true"
+nvim
+$env:DEBUG_PLENARY = $null
+```
 
 ## Notes
 Inspired by [lambdalisue/battery.vim](https://github.com/lambdalisue/battery.vim), which in turn uses code from [b4b4r07/dotfiles](https://github.com/b4b4r07/dotfiles/blob/66dddda6803ada50a0ab879e5db784afea72b7be/.tmux/bin/battery#L10).

@@ -1,6 +1,6 @@
 require('matcher_combinators.luassert')
 
-local BC = require('util.chooser')
+local BC = require('battery.util.chooser')
 
 describe('chooser', function()
   it('maximum', function()

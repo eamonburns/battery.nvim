@@ -5,7 +5,7 @@ local M = {}
 
 local J = require('plenary.job')
 local L = require('plenary.log')
-local BC = require('util.chooser')
+local BC = require('battery.util.chooser')
 local config = require('battery.config')
 local log = L.new({ plugin = 'battery' })
 

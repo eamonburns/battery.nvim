@@ -21,7 +21,7 @@ local status_to_ac_power = {
 ---Parse the response from the battery info job and update
 ---the battery status
 ---@param battery_paths string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_powersupply_battery_info(battery_paths, battery_status)
   local path_count = #battery_paths
   local battery_count = 0
@@ -64,7 +64,7 @@ local function parse_powersupply_battery_info(battery_paths, battery_status)
   end
 end
 
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 ---@return unknown # Plenary job
 function M.get_battery_info_job(battery_status)
   return J:new({

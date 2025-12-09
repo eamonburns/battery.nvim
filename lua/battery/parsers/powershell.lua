@@ -42,7 +42,7 @@ local get_battery_info_powershell_command = {
 ---Parse the response json from the battery info job and update
 ---the battery status
 ---@param result string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_powershell_battery_info(result, battery_status)
   -- Decode the json response into a list of batteries
 
@@ -83,7 +83,7 @@ end
 
 ---Create a plenary job to get the battery info
 ---battery_status is a table to store the results in
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 ---@return unknown # Plenary job
 function M.get_battery_info_job(battery_status)
   return J:new({

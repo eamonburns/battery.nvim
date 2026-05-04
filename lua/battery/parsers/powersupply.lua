@@ -2,12 +2,10 @@
 
 local M = {}
 
-local J = require('plenary.job')
-local L = require('plenary.log')
+local log = require('util.log')
 local BC = require('util.chooser')
 local config = require('battery.config')
 local file = require('util.file')
-local log = L.new({ plugin = 'battery' })
 
 -- Convert lowercase status from `/sys/class/power_supply/BAT?/status`
 -- to whether AC power is connected
@@ -20,9 +18,10 @@ local status_to_ac_power = {
 
 ---Parse the response from the battery info job and update
 ---the battery status
----@param battery_paths string[]
+---@param result string | string[]
 ---@param battery_status BatteryStatus
-local function parse_powersupply_battery_info(battery_paths, battery_status)
+local function parse_powersupply_battery_info(result, battery_status)
+  local battery_paths = type(result) == 'string' and vim.split(result, '\n', { trimempty = true }) or result
   local path_count = #battery_paths
   local battery_count = 0
 
@@ -65,28 +64,22 @@ local function parse_powersupply_battery_info(battery_paths, battery_status)
 end
 
 ---@param battery_status BatteryStatus
----@return unknown # Plenary job
 function M.get_battery_info_job(battery_status)
-  return J:new({
-    -- Find symbolic links in /sys/class/power_supply that start with BAT
-    -- These are the directories containing information files for each battery
-    command = 'find',
-    args = {
-      '/sys/class/power_supply/',
-      '-type',
-      'l',
-      '-name',
-      'BAT*',
-    },
-    on_exit = function(j, return_value)
-      if return_value == 0 then
-        parse_powersupply_battery_info(j:result(), battery_status)
-        log.debug(vim.inspect(battery_status))
-      else
-        log.error(vim.inspect(j:result()))
-      end
-    end,
-  })
+  return vim.system({
+    'find',
+    '/sys/class/power_supply/',
+    '-type',
+    'l',
+    '-name',
+    'BAT*',
+  }, { text = true }, function(obj)
+    if obj.code == 0 then
+      parse_powersupply_battery_info(obj.stdout, battery_status)
+      log.debug(battery_status)
+    else
+      log.error(obj.stderr)
+    end
+  end)
 end
 
 ---Check if this parser would work in the current environment

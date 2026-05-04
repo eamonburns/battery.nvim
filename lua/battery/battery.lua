@@ -1,6 +1,6 @@
 local M = {}
 
-local L = require('plenary.log')
+local log = require('util.log')
 local config = require('battery.config')
 local parsers = require('battery.parsers')
 local icons = require('battery.icons')
@@ -8,10 +8,6 @@ local icons = require('battery.icons')
 -- TODO: check for icons and if not available fallback to text
 -- TODO: allow user to select no icons
 -- TODO: maybe autodetect icons?
-
-local log = L.new({ plugin = 'battery' })
-
--- TODO: maybe store the update time here?
 
 ---@class BatteryStatus
 ---@field percent_charge_remaining? integer
@@ -72,7 +68,7 @@ local function timer_loop()
     log.debug('using method ' .. (method or 'nil'))
 
     if job_function then
-      job_function(battery_status):start()
+      job_function(battery_status)
     end
 
     -- When the user reloads the battery module the job can just keep running. In order to stop it
@@ -102,15 +98,36 @@ local function start_timer()
   log.debug('using method: ' .. (method or 'nil'))
 
   if job_function then
-    job_function(battery_status):start()
+    job_function(battery_status)
   end
 
   timer_loop()
   log.debug('start timer seq no ' .. timer)
 end
 
+---Check if the current Neovim version supports the required features
+---@return boolean
+function M.check_version()
+  if not vim.system then
+    local v = vim.version()
+    local version_str = string.format('%d.%d.%d', v.major, v.minor, v.patch)
+    log.error(
+      string.format(
+        'Required function vim.system not available (Neovim v%s). Please upgrade Neovim or use version v0.9.1 or earlier.',
+        version_str
+      )
+    )
+    return false
+  end
+  return true
+end
+
 ---@param user_opts Config
 function M.setup(user_opts)
+  if not M.check_version() then
+    return
+  end
+
   config.from_user_opts(user_opts)
 
   local config_update_rate_seconds = tonumber(config.current.update_rate_seconds)

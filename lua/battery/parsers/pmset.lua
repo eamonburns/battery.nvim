@@ -1,7 +1,7 @@
 -- For those with pmset (Mac users) to get battery information
 local M = {}
 
-local log = require('util.log')
+local log = require('battery.util.log')
 
 local get_battery_info_pmset_args = {
   '-g',

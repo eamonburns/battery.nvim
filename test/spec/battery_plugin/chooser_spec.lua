@@ -1,10 +1,13 @@
-local BC = require('util.chooser')
+local BC = require('battery.util.chooser')
 
-print("Running chooser specs")
+print('Running chooser specs')
 
 local function assert_eq(expected, actual, msg)
   if expected ~= actual then
-    error(string.format("%s: Expected %s, got %s", msg or "Assertion failed", vim.inspect(expected), vim.inspect(actual)), 2)
+    error(
+      string.format('%s: Expected %s, got %s', msg or 'Assertion failed', vim.inspect(expected), vim.inspect(actual)),
+      2
+    )
   end
 end
 
@@ -31,4 +34,4 @@ assert_eq(10, BC.battery_chooser({ 10, 20, 30, 40, 50 }, -1), 'index 3')
 assert_eq(0, BC.battery_chooser({}, 3), 'invalid 1')
 assert_eq(0, BC.battery_chooser(nil, 3), 'invalid 2')
 
-print("All chooser specs passed!")
+print('All chooser specs passed!')

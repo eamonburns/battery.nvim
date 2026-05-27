@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require('util.log')
+local log = require('battery.util.log')
 local config = require('battery.config')
 local parsers = require('battery.parsers')
 local icons = require('battery.icons')
@@ -40,7 +40,7 @@ local timer = nil
 local function select_job()
   for method, parser_module in pairs(parsers.parsers) do
     if parser_module.check() then
-      log.debug('using '..method..' method')
+      log.debug('using ' .. method .. ' method')
       return parser_module.get_battery_info_job, method
     end
   end
@@ -76,7 +76,7 @@ local function timer_loop()
     -- the running job knows that the sequence number no longer matches it will stop running,
     -- regardless of whether the user made a new job or not.
 
-    if require('util.timers').get_current() ~= timer then
+    if require('battery.util.timers').get_current() ~= timer then
       log.info('Update job stopping due to newer timer.')
     else
       timer_loop()
@@ -85,12 +85,12 @@ local function timer_loop()
 end
 
 -- local function stop_timer()
---   timer = require("util.timers").get_next()
+--   timer = require("battery.util.timers").get_next()
 --   log.debug("Incremented timer to " .. timer .. " to stop the battery update job")
 -- end
 
 local function start_timer()
-  timer = require('util.timers').get_next()
+  timer = require('battery.util.timers').get_next()
 
   -- Always call the job immediately before starting the timed loop
   local job_function, method = select_job()
@@ -155,11 +155,9 @@ function M.get_status_line()
       local ac_power = battery_status.ac_power
       local battery_percent = battery_status.percent_charge_remaining
       if not battery_percent then
-        log.error(
-'battery_status.percent_charge_remaining is nil, \
+        log.error('battery_status.percent_charge_remaining is nil, \
 there is probably something wrong with the current \
-parser implementation.'
-        )
+parser implementation.')
         battery_percent = 100
       end
 
@@ -170,12 +168,12 @@ parser implementation.'
         plug_icon = icons.specific.unplugged
       end
 
-			-- extra space to separate horizontal battery from plug symbol
-			if not config.vertical_icons then
-				if plug_icon ~= '' then
-					plug_icon = ' ' .. plug_icon
-				end
-			end
+      -- extra space to separate horizontal battery from plug symbol
+      if not config.vertical_icons then
+        if plug_icon ~= '' then
+          plug_icon = ' ' .. plug_icon
+        end
+      end
 
       local percent = ''
       if config.current.show_percent == true then

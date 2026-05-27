@@ -1,7 +1,7 @@
 -- Getting battery info with termux-battery-status. Requires Termux and Termux:API.
 local M = {}
 
-local log = require('util.log')
+local log = require('battery.util.log')
 
 ---@param result string | string[]
 ---@param battery_status BatteryStatus
@@ -12,7 +12,7 @@ local function parse_termux_battery_info(result, battery_status)
 
   battery_status.percent_charge_remaining = status.percentage
   battery_status.battery_count = 1 -- WARN: This might not always be true
-  battery_status.ac_power = status.plugged:find("^PLUGGED_") -- String starts with "PLUGGED_"
+  battery_status.ac_power = status.plugged:find('^PLUGGED_') -- String starts with "PLUGGED_"
   log.debug(battery_status)
 end
 

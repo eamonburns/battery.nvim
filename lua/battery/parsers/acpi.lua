@@ -3,8 +3,8 @@
 --   apt install acpi
 local M = {}
 
-local log = require('util.log')
-local BC = require('util.chooser')
+local log = require('battery.util.log')
+local BC = require('battery.util.chooser')
 local config = require('battery.config')
 
 -- TODO: would be nice to unit test the parser

@@ -9,9 +9,6 @@ if vim.env.DEV_SHELL ~= 'battery.nvim' then
   return
 end
 
-vim.pack.add({
-  'https://github.com/nvim-lua/plenary.nvim',
-})
 vim.cmd.packadd('battery.nvim')
 
 require('battery').setup({})

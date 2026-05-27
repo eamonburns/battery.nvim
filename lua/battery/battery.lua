@@ -9,7 +9,7 @@ local icons = require('battery.icons')
 -- TODO: allow user to select no icons
 -- TODO: maybe autodetect icons?
 
----@class BatteryStatus
+---@class battery.Status
 ---@field percent_charge_remaining? integer
 ---@field battery_count? integer
 ---@field ac_power? boolean
@@ -23,7 +23,7 @@ local battery_status = {
 
 ---Gets the last updated battery information
 ---TODO: may add the ability to ask for it to be updated right now
----@return BatteryStatus
+---@return battery.Status
 function M.get_battery_status()
   return battery_status
 end
@@ -35,7 +35,7 @@ local timer = nil
 
 ---Select the battery info job to run based on platform and what programs
 ---are available
----@return (fun(battery_status: BatteryStatus): any)?
+---@return (fun(battery_status: battery.Status): any)?
 ---@return string?
 local function select_job()
   for method, parser_module in pairs(parsers.parsers) do
@@ -122,7 +122,7 @@ function M.check_version()
   return true
 end
 
----@param user_opts Config
+---@param user_opts battery.Config
 function M.setup(user_opts)
   if not M.check_version() then
     return

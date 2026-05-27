@@ -19,7 +19,7 @@ local status_to_ac_power = {
 ---Parse the response from the battery info job and update
 ---the battery status
 ---@param result string | string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_powersupply_battery_info(result, battery_status)
   local battery_paths = type(result) == 'string' and vim.split(result, '\n', { trimempty = true }) or result
   local path_count = #battery_paths
@@ -63,7 +63,7 @@ local function parse_powersupply_battery_info(result, battery_status)
   end
 end
 
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 function M.get_battery_info_job(battery_status)
   return vim.system({
     'find',

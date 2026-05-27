@@ -4,7 +4,7 @@ local M = {}
 local log = require('battery.util.log')
 
 ---@param result string | string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_termux_battery_info(result, battery_status)
   local json_str = type(result) == 'table' and table.concat(result, '') or result
   local status = vim.json.decode(json_str)
@@ -18,7 +18,7 @@ end
 
 ---Create a job to get the battery info
 ---battery_status is a table to store the results in
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 function M.get_battery_info_job(battery_status)
   return vim.system({ 'termux-battery-status' }, { text = true }, function(obj)
     if obj.code == 0 then

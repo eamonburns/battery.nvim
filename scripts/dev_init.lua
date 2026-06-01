@@ -1,9 +1,11 @@
 if vim.env.DEV_SHELL ~= 'battery.nvim' then
-  -- TODO: Calculate dev-shell script that should be run based
-  -- on platform (Linux/MacOS: dev-shell.sh, Windows: DevShell.ps1)
+  local script = 'dev-shell.sh'
+  if vim.fn.has('win32') == 1 then
+    script = 'DevShell.ps1'
+  end
   vim.notify(
     '  Not in battery.nvim dev-shell, exiting dev_init.lua early.\n'
-      .. '  Source scripts/dev-shell.sh to enter dev-shell.',
+      .. ('  Source scripts/%s to enter dev-shell.'):format(script),
     vim.log.levels.ERROR
   )
   return

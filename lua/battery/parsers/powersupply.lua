@@ -2,10 +2,10 @@
 
 local M = {}
 
-local log = require('util.log')
-local BC = require('util.chooser')
+local log = require('battery.util.log')
+local BC = require('battery.util.chooser')
 local config = require('battery.config')
-local file = require('util.file')
+local file = require('battery.util.file')
 
 -- Convert lowercase status from `/sys/class/power_supply/BAT?/status`
 -- to whether AC power is connected
@@ -19,7 +19,7 @@ local status_to_ac_power = {
 ---Parse the response from the battery info job and update
 ---the battery status
 ---@param result string | string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_powersupply_battery_info(result, battery_status)
   local battery_paths = type(result) == 'string' and vim.split(result, '\n', { trimempty = true }) or result
   local path_count = #battery_paths
@@ -63,7 +63,7 @@ local function parse_powersupply_battery_info(result, battery_status)
   end
 end
 
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 function M.get_battery_info_job(battery_status)
   return vim.system({
     'find',

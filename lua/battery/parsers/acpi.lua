@@ -3,8 +3,8 @@
 --   apt install acpi
 local M = {}
 
-local log = require('util.log')
-local BC = require('util.chooser')
+local log = require('battery.util.log')
+local BC = require('battery.util.chooser')
 local config = require('battery.config')
 
 -- TODO: would be nice to unit test the parser
@@ -29,7 +29,7 @@ Battery 0: Charging, 47%, 01:09:53 until charged
 ---the plugin useless.
 ---https://github.com/justinhj/battery.nvim/issues/12
 ---@param result string | string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_acpi_battery_info(result, battery_status)
   local count = 0
   local ac_power = nil
@@ -69,7 +69,7 @@ end
 
 ---Create a job to get the battery info
 ---battery_status is a table to store the results in
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 function M.get_battery_info_job(battery_status)
   return vim.system({ 'acpi' }, { text = true }, function(obj)
     if obj.code == 0 then

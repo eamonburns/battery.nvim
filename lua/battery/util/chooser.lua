@@ -12,7 +12,7 @@ local function average(t)
   return sum / #t
 end
 
----@alias MultipleBatterySelection
+---@alias battery.MultipleBatterySelection
 ---| 'max'
 ---| 'maximum'
 ---| 'avg'
@@ -28,7 +28,7 @@ end
 ---Invalid or nil config will default to 1, the first found battery.
 ---Given an empty list will return 0
 ---@param battery_percents integer[]
----@param multiple_battery_selection MultipleBatterySelection
+---@param multiple_battery_selection battery.MultipleBatterySelection
 ---@return integer
 function M.battery_chooser(battery_percents, multiple_battery_selection)
   if type(battery_percents) ~= 'table' or battery_percents[1] == nil then

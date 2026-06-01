@@ -2,9 +2,9 @@
 
 local M = {}
 
----@alias IconSet { [1]: string, [2]: integer }[]
+---@alias battery.IconSet { [1]: string, [2]: integer }[]
 
----@type table<string, IconSet>
+---@type table<string, battery.IconSet>
 M.sets = {
   plain = {
     { '󰁺', 10 }, -- nf-md-battery_10.
@@ -91,7 +91,7 @@ M.specific = {
 ---Convert percentage charge to icon given a table of icons
 ---and max charge for that icon
 ---@param p integer
----@param icon_table IconSet
+---@param icon_table battery.IconSet
 ---@return string
 function M.icon_for_percentage(p, icon_table)
   for _, icon in ipairs(icon_table) do

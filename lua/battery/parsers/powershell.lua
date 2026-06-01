@@ -1,7 +1,7 @@
 -- Getting battery info with Powershell. Requires Windows.
 local M = {}
 
-local log = require('util.log')
+local log = require('battery.util.log')
 
 -- Whether the AC power is connected based on Status field of win32 Battery
 -- see https://powershell.one/wmi/root/cimv2/win32_battery#battery-status
@@ -31,12 +31,13 @@ local status_code_to_ac_power = {
 --     "BatteryStatus": 2
 --   }
 -- ]
-local get_battery_info_powershell_command = 'ConvertTo-Json @(Get-CimInstance -ClassName Win32_Battery | Select-Object -Property EstimatedChargeRemaining,BatteryStatus)'
+local get_battery_info_powershell_command =
+  'ConvertTo-Json @(Get-CimInstance -ClassName Win32_Battery | Select-Object -Property EstimatedChargeRemaining,BatteryStatus)'
 
 ---Parse the response json from the battery info job and update
 ---the battery status
 ---@param result string | string[]
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 local function parse_powershell_battery_info(result, battery_status)
   -- Decode the json response into a list of batteries
 
@@ -79,7 +80,7 @@ end
 
 ---Create a job to get the battery info
 ---battery_status is a table to store the results in
----@param battery_status BatteryStatus
+---@param battery_status battery.Status
 function M.get_battery_info_job(battery_status)
   return vim.system({ 'powershell', get_battery_info_powershell_command }, { text = true }, function(obj)
     if obj.code == 0 then

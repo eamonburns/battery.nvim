@@ -2,11 +2,11 @@ local M = {}
 
 ---@module 'battery.battery'
 
----@class ParserModule
+---@class battery.ParserModule
 ---@field check fun(): boolean
----@field get_battery_info_job fun(battery_status: BatteryStatus): any
+---@field get_battery_info_job fun(battery_status: battery.Status): any
 
----@type table<string, ParserModule>
+---@type table<string, battery.ParserModule>
 M.parsers = {
   powershell = require('battery.parsers.powershell'),
   pmset = require('battery.parsers.pmset'),
